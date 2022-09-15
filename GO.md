@@ -375,3 +375,56 @@ sub_slice = s[1:3]
 //子切片和母切片共享底层的内存空间，子切片修改会反映到母切片上，在子切片上执行append会把新元素放到母切片的预留内存空间上
 //当子切片不断地append，消耗完母切片预留的内存空间，子切片和母切片发生内存分离，两个切片毫无关系
 ```
+
+### map
+
+```go
+//go map底层实现是hash table，根据key查找value的时间复杂度是O(1)
+//key值生成hash值，对数组长度取模，然后分配到对应槽位，如有冲突，对应的槽位上形成链表
+//如果槽位利用率过高，则会重新分配，key
+```
+
+初始化
+
+```go
+var m map[string]int			//声明map，指定的key和value的数据类型
+m = make(map[string]int)		//初始化，容量为0
+m = make(map[string]int,5)		//初始化，容量为5，最好给个合适的容量
+m = map[string]int{"haha":2,"hehe":3}
+m["h"] = 1
+m["h"] = 2//会覆盖之前的值
+delete(m,"h")//删除元素
+len(m)//获取map的长度
+//不能调用cap函数
+
+//读取值
+value :=m["h"]
+//如果不存在，默认值，例如int，则会是0
+要判断
+value,ok :=m["O"]
+```
+
+```go
+func main() {
+	var m map[string]int
+	m = make(map[string]int, 10) //cap=10
+	m = map[string]int{"a": 10, "b": 30}
+	m["D"] = 10
+	delete(m, "D")
+	for key, value := range m {
+		fmt.Printf("key=%s,value=%d\n", key, value)
+	}
+	value, ok := m["A"]
+	if ok {
+		fmt.Printf("%d\n", value)
+	} else {
+		fmt.Println("不存在")
+	}
+}
+```
+
+### channel
+
+管道是一个环形队列（先进先出），send（插入），recv（取走），从同一个位置，向同一个方向顺序执行
+
+sendx代表最后插入元素的位置，recvx代表最后一次取走元素的位置
