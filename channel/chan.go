@@ -40,10 +40,13 @@ func makeSlice() {
 	fmt.Println(len(m))
 }
 func makeS(n int) []int {
+	//变换seed
+	source := rand.NewSource(3333223)
+	rander := rand.New(source)
 	var s []int
 	s = make([]int, 0, 10)
 	for i := 0; i < n; i++ {
-		s = append(s, rand.Intn(128))
+		s = append(s, rander.Intn(128))
 	}
 	return s
 }
