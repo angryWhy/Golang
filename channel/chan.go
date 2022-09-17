@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
+	"strings"
 )
 
 // 基本操作
@@ -49,4 +51,12 @@ func makeS(n int) []int {
 		s = append(s, rander.Intn(128))
 	}
 	return s
+}
+func addStr(n []int) string {
+	var s strings.Builder
+	for _, ele := range n {
+		s.WriteString(strconv.Itoa(ele))
+		s.WriteString(" ")
+	}
+	return strings.Trim(s.String(), " ")
 }

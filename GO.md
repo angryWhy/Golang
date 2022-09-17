@@ -376,6 +376,22 @@ sub_slice = s[1:3]
 //当子切片不断地append，消耗完母切片预留的内存空间，子切片和母切片发生内存分离，两个切片毫无关系
 ```
 
+#### 练习
+
+```go
+实现一个func arrstring(arr []int) string(){
+	//比如输入[]int{1,2,3}，返回“1,2,3”,切片很短，也可能很长
+}
+func addStr(n []int) string {
+	var s strings.Builder
+	for _, ele := range n {
+		s.WriteString(strconv.Itoa(ele))
+		s.WriteString(" ")
+	}
+	return strings.Trim(s.String(), " ")
+}
+```
+
 ### map
 
 ```go
@@ -483,5 +499,174 @@ length :=len(ch)
 for i:=0;i<length;i++{}
 //循环完长度为0
 相当于取出来进行操作
+```
+
+### 结构体
+
+##### 定义
+
+```go
+type user struct{
+	id int
+	score float32
+	time time.Time
+	name,address string
+}
+```
+
+##### 初始化一个实例
+
+```go
+var u user //相对应的默认值初始化struct
+u = user{}
+u = user{id:1,score:2.2,}//赋值
+u = user{4,100.00}//必须按照顺序赋值
+//访问
+u.id
+```
+
+##### 成员函数（方法）
+
+```go
+func(u User) hello(t string){
+	fmt.println(u.name)
+}
+//不使用
+func (_ User)hello(t string){
+	fmt.println(u.name)
+}
+```
+
+##### 任意类型添加方法
+
+```go
+type UserMap map[string]User
+func (um UserMap)GetUser(id int)int{
+	return um[id]
+}
+```
+
+##### 可见性
+
+```
+字母大写，跨package访问
+```
+
+##### 匿名结构体
+
+只是用一次的情况
+
+```
+var user struct{
+	id int
+}
+```
+
+##### 例子
+
+```go
+type User struct {
+	name string
+	time time.Time
+	age  int
+}
+
+func (user User) say() int {
+	return user.age
+}
+func (_ User) jump() {
+	fmt.Println("hello")
+}
+func main() {
+	u := User{
+		name: "wzx",
+		time: time.Now(),
+		age:  22,
+	}
+}
+```
+
+##### 结构体指针
+
+```go
+type User struct {
+	name string
+	time time.Time
+	age  int
+}
+var u User
+//1.
+user := &u
+//2.如果赋值了，就不等价于1.
+user = &User{name:"he",......}
+//3.通过new函数实体化一个结构体，返回其指针
+user = new(User)
+```
+
+构造函数指针
+
+好处，返回地址，不用拷贝值
+
+```
+func NewUser() *User{
+	return &User{
+		id:1,
+		name:@
+	}
+}
+```
+
+```go
+//user传的是值，即是整个结构体的拷贝，在函数里修改结构体，不会影响原来的结构体
+func hello (u User,man string){
+	u.name = "hello jack"
+}
+//传的是User的指针，可以原先的结构体
+func say (u *User,man string){
+	u.name = "hello jack"
+}
+
+//
+func say(u User) {
+	u.name = "zxc"
+}
+func say2(u *User) {
+	u.name = "zxc"
+}
+func main() {
+	u := User{
+		name: "hello",
+	}
+	say(u)
+	fmt.Printf("%s\n", u.name)
+	say2(&u)
+	fmt.Printf("%s\n", u.name)
+}
+```
+
+#### 结构体嵌套
+
+嵌套：逐级访问属性
+
+对于匿名结构体可以跳过，直接访问内部属性
+
+如果冲突,加上中间字段名字
+
+```go
+type user struct{
+	name string
+}
+type person struct{
+	student user
+}
+//匿名字段
+type teacher struct{
+    name int
+    //匿名
+    user
+}
+//冲突，例如
+t :=new (teacher)
+t.name = "hello"
 ```
 
