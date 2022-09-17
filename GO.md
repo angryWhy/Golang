@@ -423,6 +423,29 @@ func main() {
 }
 ```
 
+#### 练习
+
+```go
+创建一个长度为100的切片，添加100个元素，map去重
+func makeSlice() {
+	s := makeS(100)
+	fmt.Println(len(s))
+	m := make(map[int]int, len(s))
+	for _, v := range s {
+		m[v] = 1
+	}
+	fmt.Println(len(m))
+}
+func makeS(n int) []int {
+	var s []int
+	s = make([]int, 0, 10)
+	for i := 0; i < n; i++ {
+		s = append(s, rand.Intn(128))
+	}
+	return s
+}
+```
+
 ### channel
 
 管道是一个环形队列（先进先出），send（插入），recv（取走），从同一个位置，向同一个方向顺序执行
@@ -444,5 +467,21 @@ ch <-5
 ch <-6
 v :=<-ch//向管道里取数据
 s :=<-ch
+```
+
+##### 遍历管道
+
+```go
+close(ch)			//遍历前，先关闭管道，禁止写入数据
+for ele := range ch {
+		fmt.Println(ele)
+	}
+
+//for循环
+先保存长度
+length :=len(ch)
+for i:=0;i<length;i++{}
+//循环完长度为0
+相当于取出来进行操作
 ```
 
