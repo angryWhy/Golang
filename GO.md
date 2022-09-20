@@ -670,3 +670,51 @@ t :=new (teacher)
 t.name = "hello"
 ```
 
+### 深浅拷贝
+
+深拷贝：开辟新的内存空间
+
+浅拷贝：拷贝的是指针
+
+```go
+slice引用类型，底层实现了：数组的指针，len，cap
+user :=[]user{{name:"haha"}}
+func main(user []){
+	user[0].name = "hehe"
+}
+拷贝的底层数组：修改会反映到原来的slice上
+```
+
+### if语句
+
+```go
+if语句
+if 9>5 {
+	//执行这里的内容
+}
+//可以包含初始化变量,表达式可以包含变量或者常量，允许包含一个分号，变量在if块可见
+if c,d :=1,3;c<d{
+	
+}
+//例如使用map
+	m := make(map[string]int, 10)
+	if value, exist := m["1"]; exist {
+		fmt.Println(value)
+	}
+```
+
+### switch语句
+
+```go
+	color := "black"
+	switch color {
+		case "black":
+			fmt.Println("ok")
+       		 fallthrough
+		default:
+			fmt.Println("")
+	}
+//fallthrough
+case里面带了fallthrough，会继续执行后面的代码
+```
+
