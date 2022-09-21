@@ -718,3 +718,37 @@ if c,d :=1,3;c<d{
 case里面带了fallthrough，会继续执行后面的代码
 ```
 
+switch type
+
+```go
+var num interface{} = 6.5
+	switch num.(type) {
+	case int:
+		fmt.Printf("%d", num)
+	case float64:
+		fmt.Printf("%f", num)
+	case bool:
+		fmt.Printf("%b", num)
+	}
+```
+
+### for
+
+for 初始化值;条件表达式;增减
+
+for{},无限循环
+
+for 条件表达式 
+
+for range
+
+```go
+遍历字符串，"包含中文"
+for k,v := range "包含中文",v为rune类型
+遍历map不保证顺序
+for k,v := range m,
+遍历channel，先close关闭管道
+for ele := range ch
+//for range 拿到的是数组的拷贝
+```
+
