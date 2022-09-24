@@ -218,7 +218,6 @@ func add() {
 	fmt.Println(sub2)
 	fmt.Println(sub3)
 	fmt.Println(sub5)
-
 }
 ```
 
@@ -449,12 +448,12 @@ func makeSlice() {
 	m := make(map[int]int, len(s))
 	for _, v := range s {
 		m[v] = 1
-	}
+	} 
 	fmt.Println(len(m))
 }
 func makeS(n int) []int {
 	var s []int
-	s = make([]int, 0, 10)
+	s = make([]int, 0, 100)
 	for i := 0; i < n; i++ {
 		s = append(s, rand.Intn(128))
 	}
@@ -750,5 +749,109 @@ for k,v := range m,
 遍历channel，先close关闭管道
 for ele := range ch
 //for range 拿到的是数组的拷贝
+```
+
+### goto与label
+
+```
+break,continue与label结合使用可以跳到更外层for循环
+continue和breack针对的label唏嘘卸载for循环前面，goto可以写任何位置的label
+并不是互斥的
+```
+
+```go
+func main() {
+	var i = 0
+	if i%2 == 0 {
+		goto L1
+	}
+	if i%2 == 1 {
+		goto L2
+	}
+L1:
+	i += 3
+L2:
+	i += 2
+}
+//L1后会执行L2
+```
+
+### 函数
+
+#### 形参实参
+
+```go
+//a,b为形参,形参是函数内的局部变量，实参的值会拷贝给形参
+func main (a int,b int){
+	a +=b 	//在函数内部修改形参的值，实参的值不受影响
+}
+var a,b = 1,2
+main(a,b)//a,b为实参
+//形参可以有0个或者多个
+//参数类型相同的时候可以只写一个，a,b int
+```
+
+##### slice问题
+
+```go
+func foo(){
+    //创建arr,len:1,cap:5
+    arr := make([]int,1,5)
+    //修改首元素，并添加元素，len,cap,指针拷贝
+    bar(arr)
+    //len还是原先的1，因为bar函数len是拷贝的，修改后不影响原先的
+    fmt.pritl(arr)
+}
+func bar(arr []int){
+	arr[0] = 1
+    append(arr,2)
+    //修改len长度
+}
+
+```
+
+#### 参数指针
+
+```go
+//如果想修改实参
+func arg(a,b *int){
+	*a +=*b
+    *b =888
+}
+var x ,y = 1,2
+arg(&x,&b)
+```
+
+#### 参数：传引用-传引用的指针
+
+```go
+slice,map,channel都是引用类型，他们作为函数参数其实跟普通的struct没什么区别，都是跟struct没什么区别，都是对struct的内部字段进行与一次拷贝，
+func s (arr []int)//slice作为参数传进来，实际上是对slice的arrPointer、len、cap拷贝传进来
+```
+
+#### 函数的返回值
+
+```
+可以返回0或多个参数
+可以在func行直接声明要返回的变量
+return后面语句不会执行
+func ff(a,b int)( c int ,d int){
+	c = a+b
+	d = a+b
+	return
+}
+```
+
+#### 不定长参数
+
+```go
+//不定长参数,类似slice的数据结构
+func otherArg (a int,other...int)int{
+    for _,ele := range other{
+        fmt.println(ele)
+    }
+    len(other)
+    cap(other)
+}
 ```
 
