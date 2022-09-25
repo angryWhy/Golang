@@ -853,5 +853,68 @@ func otherArg (a int,other...int)int{
     len(other)
     cap(other)
 }
+//append接受的是不定长参数
+append(s,1,2,3)
+//相当于[]byte{"123"}
+append(s,"123"...)
+```
+
+#### 递归
+
+```go
+func F(n int){
+	if n==0 ||n==1{
+		return n
+	}
+	return F(n-1)+F(n-2)
+}
+```
+
+匿名函数
+
+```go
+//当做参数传递
+type foo func(a,b int) int
+func (f foo,a int) int{
+    a :=2
+    return foo(a,b)
+}
+//匿名
+type User struct {
+	buy foo
+    say func(name string) string//匿名
+}
+ch :=make(chan func(string)string,10)
+ch<- func kell(name string)string{ return name}
+```
+
+#### defer关键字
+
+```go
+//栈结构
+func main (){
+	fmt.Prinln("A")
+    defer fmt.Prinln("b")
+    defer fmt.Prinln("2")
+    fmt.Prinln("C")
+}
+//output:A,C,2,b
+func defer_exe(i int)int{
+	i = 9
+    //注册函数，不关联，真正执行会计算
+    defer func(){
+        //5
+        fmt.Println(i)
+    }()
+    //注册函数，直接传值
+    defer func(i int){
+        //9
+        fmt.Println(i)
+    }(i)
+    	//9
+    //跟的是表达式，那么会直接关联注册时的值
+    defer fmt.println(i)
+    return 5 
+}
 ```
 
