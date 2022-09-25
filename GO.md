@@ -918,3 +918,122 @@ func defer_exe(i int)int{
 }
 ```
 
+#### 异常机制
+
+```go
+fucn sum(a,b int)int{
+	if b==0{
+		return -1 ,error.New ("") 
+	}
+	return a+b,nil
+}
+if res,err :=sum(1,2);err!=nil{
+	打印异常
+}
+```
+
+#### panic
+
+```
+运行时错误会导致panic，数组越界，除0
+程序主动调用
+//painc会执行什么
+1.逆序执行当前的goroutine的defer链，（recover从这里介入），recover必须在defer里面生效
+2.打印错误信息
+3.调用exit（2）结束进程
+```
+
+```go
+//自定义error
+func NewPathError(path, name string) PathError {
+	return PathError{
+		name:    name,
+		path:    path,
+		time:    time.Now().Format("2022-09-25"),
+		message: "haha",
+	}
+}
+func (e PathError) Error() string {
+	return e.time + e.name + e.message
+}
+```
+
+##### recover
+
+```go
+func foo() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("发生了panic，不让程序退出")
+		}
+	}()
+	panic(2)
+}
+```
+
+#### 接口
+
+```go
+//一组行为规范的合集
+type Transporter interface {
+	//只定义方法，不定义常量,方法名，参数列表，返回值列表
+	move(src string,des string)(int ,err)
+	//参数列表和返回值列表都可以省略变量名
+	whistle(int)int
+}
+```
+
+##### 实现接口
+
+```go
+type User struct {
+	price int
+}
+//只要结构体拥有接口声明的(所有方法)，就成该结构体实现了接口
+func (u User)move (a string) string{
+	return u.price,nil
+}
+```
+
+##### 接口的本质
+
+1.指向该接口类型的指针
+
+2.指向该具体类型的真实数据的指针
+
+3.兼容
+
+```go
+某个struct实现了接口
+func foo (src,name string,u User){
+	
+}
+var car Car//实现了User接口
+var ship Ship//实现了User接口
+//兼容
+foo("a","b",car)
+foo("a","b",ship)
+```
+
+```go
+type User interface {
+	say(int)
+	move(int)
+}
+type car struct {
+}
+type ship struct {
+}
+
+func (c car) move(a int) {
+
+}
+func (c car) say(a int) {
+
+}
+//指针实现了接口，但是值没实现，不能兼容，值上没有
+func (*car) say(a int) {
+
+}
+```
+
